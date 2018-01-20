@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TS.Core.ExpressionExtension
+namespace TS.Data
 {
     public class ParameterRebinder : ExpressionVisitor
     {

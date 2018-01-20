@@ -4,10 +4,9 @@ using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using TS.Core.ExpressionExtension;
+using TS.Core.Domain;
 using TS.Core.Log;
+using TS.Data;
 
 namespace TS.Core.EF
 {
@@ -15,7 +14,7 @@ namespace TS.Core.EF
         where T : BaseEntity
         where C : DbContext
     {
-        private readonly DbContext EFContext;
+        private readonly C EFContext;
         private DbSet<T> entities;
 
         public EFRepository()
@@ -37,6 +36,14 @@ namespace TS.Core.EF
             {
                 return DynamicLinqExpressions.False<T>();
             }
+        }
+
+        /// <summary>
+        /// 获取数据库上下文
+        /// </summary>
+        public virtual C Context
+        {
+            get { return EFContext; }
         }
 
         /// <summary>

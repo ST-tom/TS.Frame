@@ -5,17 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TS.Core.EF
+namespace TS.Core.Domain
 {
     public  class HomeTextilesContext : DbContext
     {
         static HomeTextilesContext()
         {
-            Database.SetInitializer<HomeTextilesContext>(new CreateDatabaseIfNotExists<HomeTextilesContext>());
-            using (var context = new HomeTextilesContext())
-            {
-                context.Database.Initialize(true);
-            }
+            //不通过EF建立数据库
+            //Database.SetInitializer<HomeTextilesContext>(new CreateDatabaseIfNotExists<HomeTextilesContext>());
+            //using (var context = new HomeTextilesContext())
+            //{
+            //    context.Database.Initialize(false);
+            //}
         }
 
         public HomeTextilesContext()

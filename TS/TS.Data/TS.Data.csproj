@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BD105513-4EEA-429B-A6B7-964EB37735A4}</ProjectGuid>
+    <ProjectGuid>{1DD913B4-3233-4672-8BC5-AE7B2BA26D92}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TS.Service</RootNamespace>
-    <AssemblyName>TS.Service</AssemblyName>
+    <RootNamespace>TS.Data</RootNamespace>
+    <AssemblyName>TS.Data</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,7 +41,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,24 +49,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cookie\CookieHelper.cs" />
+    <Compile Include="DynamicLinqExpressions.cs" />
     <Compile Include="EFRepository.cs" />
     <Compile Include="EFResult.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
+    <Compile Include="ParameterRebinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TS.Core\TS.Core.csproj">
-      <Project>{093a2ddd-b68b-4491-b717-d5ad64e46d52}</Project>
-      <Name>TS.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TS.Data\TS.Data.csproj">
-      <Project>{1DD913B4-3233-4672-8BC5-AE7B2BA26D92}</Project>
-      <Name>TS.Data</Name>
-    </ProjectReference>
+    <Compile Include="TSEntityTypeConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TS.Core\TS.Core.csproj">
+      <Project>{093A2DDD-B68B-4491-B717-D5AD64E46D52}</Project>
+      <Name>TS.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mapping\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

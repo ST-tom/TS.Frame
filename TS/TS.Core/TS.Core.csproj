@@ -54,23 +54,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EF\BaseEntity.cs" />
-    <Compile Include="EF\EFRepository.cs" />
-    <Compile Include="EF\EFResult.cs" />
-    <Compile Include="EF\HomeTextilesContext.cs" />
+    <Compile Include="Domain\BaseEntity.cs" />
+    <Compile Include="Domain\HomeTextilesContext.cs" />
     <Compile Include="Log\HttpErrorHelper.cs" />
     <Compile Include="PagedList.cs" />
-    <Compile Include="ExpressionExtension\DynamicLinqExpressions.cs" />
-    <Compile Include="ExpressionExtension\ParameterRebinder.cs" />
     <Compile Include="Log\LogHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -6,12 +6,12 @@ using System.Web.Mvc;
 
 namespace TS.Web.Controllers
 {
-    public class CommonController : Controller
+    public class CommonController : BaseController
     {
         // GET: Common
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("PageNotFound");
         }
 
         public ActionResult PageNotFound()
