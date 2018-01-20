@@ -10,18 +10,21 @@ namespace TS.Service.Cookie
 {
     public partial class CookieHelper
     {
-        protected void SetUserLoginCookie(HttpResponseBase response,dynamic user)
+        /// <summary>
+        /// 将登录的用户的消息，以票据的形式存入到cookie中
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="userName">名称</param>
+        /// <param name="userData">返回的用户信息(用户id或guid)</param>
+        protected void SetUserLoginCookie(HttpResponseBase response,string userName,string userData)
         {
-            if (user == null)
-                throw new ArgumentNullException("user");
-
             var ticket = new FormsAuthenticationTicket(
                 1 /*version*/,
-                user.Name,
+                userName,
                 DateTime.Now,
                 DateTime.Now.Add(FormsAuthentication.Timeout),
                 false,
-                user.CustomerGuid.ToString(),
+                userData,
                 FormsAuthentication.FormsCookiePath);
 
             var encryptedTicket = FormsAuthentication.Encrypt(ticket);
@@ -41,6 +44,11 @@ namespace TS.Service.Cookie
             response.Cookies.Add(cookie);
         }
 
+        /// <summary>
+        /// 获取当前cookie存储登录的票据，返回票据的UserData
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         protected string GetUserLoginCookie(HttpRequestBase request)
         {
             var cookie = request.Cookies[FormsAuthentication.FormsCookieName];
