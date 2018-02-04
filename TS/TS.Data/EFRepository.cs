@@ -11,338 +11,363 @@ using TS.Core.Log;
 
 namespace TS.Data
 {
-    public partial class EFRepository<T, C>
-        where T : class
+    public partial class EFRepository<C>
         where C : DbContext
     {
-        private readonly C EFContext;
-        private DbSet<T> entities;
+        private readonly C context;
 
         public EFRepository()
         {
-            EFContext = System.Activator.CreateInstance<C>();
-        }
-
-        public static Expression<Func<T, bool>> ExpressionTrue
-        {
-            get
-            {
-                return DynamicLinqExpressions.True<T>();
-            }
-        }
-
-        public static Expression<Func<T, bool>> ExpressionFalse
-        {
-            get
-            {
-                return DynamicLinqExpressions.False<T>();
-            }
+            context = System.Activator.CreateInstance<C>();
         }
 
         /// <summary>
-        /// 获取数据库上下文
+        /// 实体集数据源
         /// </summary>
-        public virtual C Context
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public virtual IQueryable<T> Table<T>()
+            where T : BaseEntity
         {
-            get { return EFContext; }
+            return context.Set<T>();
         }
 
         /// <summary>
-        /// 获取EF对应表
+        /// 实体集数据源,实时从数据库查询
         /// </summary>
-        public virtual IQueryable<T> Table
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public virtual IQueryable<T> TableNoTracking<T>()
+            where T : BaseEntity
         {
-            get
-            {
-                return this.Entities;
-            }
+            return context.Set<T>().AsNoTracking();
         }
 
         /// <summary>
-        /// 获取数据库实时数据,不通过上下文
+        /// 表达式树，起始为True
         /// </summary>
-        public virtual IQueryable<T> TableNoTracking
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static Expression<Func<T, bool>> ExpressionTrue<T>()
         {
-            get
-            {
-                return this.Entities.AsNoTracking();
-            }
+            return DynamicLinqExpressions.True<T>();
         }
 
         /// <summary>
-        /// Entities
+        /// 表达式树，起始为False，即非
         /// </summary>
-        protected virtual DbSet<T> Entities
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static Expression<Func<T, bool>> ExpressionFalse<T>()
         {
-            get
-            {
-                if (entities == null)
-                    entities = EFContext.Set<T>();
-                return entities;
-            }
+            return DynamicLinqExpressions.False<T>();
         }
 
-        public virtual PagedList<T> GetPagedData<TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLamda, Expression<Func<T, TKey>> orderByLamda)
+        /// <summary>
+        /// 获取分页实体集，正序排列
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="whereLamda">过滤条件</param>
+        /// <param name="orderByLamda">排序字段</param>
+        /// <returns></returns>
+        public virtual PagedList<T> GetPagedData<T,TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLamda, Expression<Func<T, TKey>> orderByLamda)
+            where T : BaseEntity
         {
-            var list = Entities.Where(whereLamda).OrderBy(orderByLamda);
-            return new PagedList<T>(list, pageIndex, pageSize);
-        }
-
-        public virtual PagedList<T> GetPagedData<TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLamda, Expression<Func<T, TKey>> orderByLamda, Expression<Func<T, TKey>> thenOrderByLamada)
-        {
-            var list = Entities.Where(whereLamda).OrderBy(orderByLamda).ThenBy(thenOrderByLamada);
-            return new PagedList<T>(list, pageIndex, pageSize);
-        }
-
-        public virtual PagedList<T> GetPageDataDes<TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLamda, Expression<Func<T, TKey>> orderByDesLamda)
-        {
-            var list = Entities.Where(whereLamda).OrderByDescending(orderByDesLamda);
-            return new PagedList<T>(list, pageIndex, pageSize);
-        }
-
-        public virtual PagedList<T> GetPageDataDes<TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLamda, Expression<Func<T, TKey>> orderByDesLamda, Expression<Func<T, TKey>> thenOrderByDesLamda)
-        {
-            var list = Entities.Where(whereLamda).OrderByDescending(orderByDesLamda).ThenByDescending(thenOrderByDesLamda);
+            var list = context.Set<T>().Where(whereLamda).OrderBy(orderByLamda);
             return new PagedList<T>(list, pageIndex, pageSize);
         }
 
         /// <summary>
-        /// 获取数据
+        /// 获取分页实体集，倒序排列
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="whereLamda">过滤条件</param>
+        /// <param name="orderByDesLamda">排序字段</param>
+        /// <returns></returns>
+        public virtual PagedList<T> GetPageDataDes<T,TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLamda, Expression<Func<T, TKey>> orderByDesLamda)
+            where T : BaseEntity
+        {
+            var list = context.Set<T>().Where(whereLamda).OrderByDescending(orderByDesLamda);
+            return new PagedList<T>(list, pageIndex, pageSize);
+        }
+
+        /// <summary>
+        /// 根据Id查找实体
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual T GetById<T>(int id)
+            where T : BaseEntity
+        {
+            return context.Set<T>().Find(id);
+        }
+
+        /// <summary>
+        /// 获取实体
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="whereLamda"></param>
         /// <returns></returns>
-        public virtual T Get(Expression<Func<T, bool>> Lamda)
+        public virtual T Get<T>(Expression<Func<T, bool>> Lamda)
+            where T : BaseEntity
         {
-            try
-            {
-                return Entities.FirstOrDefault(Lamda);
-            }
-            catch (Exception ex)
-            {
-                LogHelper.Error("数据库查询实体失败,错误原因:" + ex.Message, ex);
-                return null;
-            }
+            return context.Set<T>().FirstOrDefault(Lamda);
         }
 
         /// <summary>
-        /// 批量获取数据
+        /// 批量获取实体
         /// </summary>
         /// <param name="Lamda"></param>
         /// <returns></returns>
-        public virtual IQueryable<T> GetMany(Expression<Func<T, bool>> Lamda)
+        public virtual IQueryable<T> GetMany<T>(Expression<Func<T, bool>> Lamda)
+            where T : BaseEntity
         {
-            try
-            {
-                return Entities.Where(Lamda);
-            }
-            catch (Exception ex)
-            {
-                LogHelper.Error("数据库查询实体集失败，错误原因:" + ex.Message);
-                return null;
-            }
+            return context.Set<T>().Where(Lamda);
         }
 
         /// <summary>
-        /// 更新数据
+        /// 更新实体
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual EFResult Update(T entity)
+        public virtual int Update<T>(T entity)
+            where T : BaseEntity
         {
             try
             {
-                EFContext.Entry(entity).State = EntityState.Modified;
-                EFContext.SaveChanges();
-                return new EFResult();
+                context.Entry(entity).State = EntityState.Modified;
+                return context.SaveChanges();
             }
-            catch (DbEntityValidationException ex)
+            catch (DbEntityValidationException dbEx)
             {
-                string str = "";
-                foreach (var i in ex.EntityValidationErrors)
-                {
-                    foreach (var j in i.ValidationErrors)
-                    {
-                        str += j.ErrorMessage + "，";
-                    }
-                }
-                LogHelper.Error("数据库更新实体失败,错误原因：" + str, ex);
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
-            catch (Exception ex)
-            {
-                LogHelper.Error("数据库更新实体失败,错误原因：" + ex.Message, ex);
-            }
-            return new EFResult("修改失败");
         }
 
         /// <summary>
-        /// 批量更新数据
+        /// 更新实体，不保存到数据库
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        public virtual void UpdateNoSave<T>(T entity)
+            where T : BaseEntity
+        {
+            context.Entry(entity).State = EntityState.Modified;
+        }
+
+
+        /// <summary>
+        /// 批量更新实体
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public virtual EFResult Update(List<T> list)
+        public virtual int Update<T>(IEnumerable<T> list)
+            where T : BaseEntity
         {
             try
             {
                 foreach (var entity in list)
                 {
-                    EFContext.Entry(entity).State = EntityState.Modified;
+                    context.Entry(entity).State = EntityState.Modified;
                 }
-                EFContext.SaveChanges();
-                return new EFResult();
+                return context.SaveChanges();
             }
-            catch (DbEntityValidationException ex)
+            catch (DbEntityValidationException dbEx)
             {
-                string str = "";
-                foreach (var i in ex.EntityValidationErrors)
-                {
-                    foreach (var j in i.ValidationErrors)
-                    {
-                        str += j.ErrorMessage + "，";
-                    }
-                }
-                LogHelper.Error("数据库更新实体集失败，错误原因：" + str, ex);
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
-            catch (Exception ex)
-            {
-                LogHelper.Error("数据库更新实体集失败，错误原因：" + ex.Message, ex);
-            }
-            return new EFResult("修改失败");
         }
 
         /// <summary>
-        /// 插入数据
+        /// 批量更新实体，不保存到数据库
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public virtual void UpdateNoSave<T>(IEnumerable<T> list)
+            where T : BaseEntity
+        {
+            foreach (var entity in list)
+            {
+                context.Entry(entity).State = EntityState.Modified;
+            }
+        }
+
+        /// <summary>
+        /// 插入实体
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual EFResult Insert(T entity)
+        public virtual int Insert<T>(T entity)
+            where T : BaseEntity
         {
             try
             {
-                EFContext.Entry(entity).State = EntityState.Added;
-                EFContext.SaveChanges();
-                return new EFResult();
+                context.Entry(entity).State = EntityState.Added;
+                return context.SaveChanges();
             }
-            catch (DbEntityValidationException ex)
+            catch (DbEntityValidationException dbEx)
             {
-                string str = "";
-                foreach (var i in ex.EntityValidationErrors)
-                {
-                    foreach (var j in i.ValidationErrors)
-                    {
-                        str += j.ErrorMessage;
-                    }
-                }
-                LogHelper.Error("新增实体失败，错误原因：" + str, ex);
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
-            catch (Exception ex)
-            {
-                LogHelper.Error("新增实体失败，错误原因：" + ex.Message, ex);
-            }
-            return new EFResult("新增失败");
         }
 
         /// <summary>
-        /// 批量插入数据
+        /// 插入实体，不保存到数据库
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public virtual void InsertNoSave<T>(T entity)
+            where T : BaseEntity
+        {
+            context.Entry(entity).State = EntityState.Added;
+        }
+
+        /// <summary>
+        /// 批量插入实体
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public virtual EFResult Insert(List<T> list)
+        public virtual int Insert<T>(IEnumerable<T> list)
+            where T :BaseEntity
         {
             try
             {
                 foreach (var entity in list)
                 {
-                    EFContext.Entry(entity).State = EntityState.Added;
+                    context.Entry(entity).State = EntityState.Added;
                 }
-                EFContext.SaveChanges();
-                return new EFResult();
+                return context.SaveChanges();
             }
-            catch (DbEntityValidationException ex)
+            catch (DbEntityValidationException dbEx)
             {
-                string str = "";
-                foreach (var i in ex.EntityValidationErrors)
-                {
-                    foreach (var j in i.ValidationErrors)
-                    {
-                        str += j.ErrorMessage + "，";
-                    }
-                }
-                LogHelper.Error("新增实体集失败，错误原因：" + str, ex);
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
-            catch (Exception ex)
-            {
-                LogHelper.Error("新增实体集失败，错误原因：" + ex.Message, ex);
-            }
-            return new EFResult("新增失败");
         }
 
         /// <summary>
-        /// 删除数据
+        /// 批量插入实体，不保存到数据库
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public virtual void InsertNoSave<T>(IEnumerable<T> list)
+            where T : BaseEntity
+        {
+            foreach (var entity in list)
+            {
+                context.Entry(entity).State = EntityState.Added;
+            }
+        }
+
+        /// <summary>
+        /// 删除实体
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual EFResult Delete(T entity)
+        public virtual int Delete<T>(T entity)
+             where T : BaseEntity
         {
             try
             {
-                EFContext.Entry(entity).State = EntityState.Deleted;
-                EFContext.SaveChanges();
-                return new EFResult();
+                context.Entry(entity).State = EntityState.Deleted;
+                return context.SaveChanges();
             }
-            catch (Exception ex)
+            catch (DbEntityValidationException dbEx)
             {
-                LogHelper.Error("删除实体失败，错误原因：" + ex.Message, ex);
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
-            return new EFResult("删除失败");
         }
 
         /// <summary>
-        /// 批量删除
+        /// 删除实体，不保存到数据库
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public virtual void DeleteNosave<T>(T entity)
+             where T : BaseEntity
+        {
+            context.Entry(entity).State = EntityState.Deleted;
+        }
+
+        /// <summary>
+        /// 批量删除实体
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public virtual EFResult Delete(List<T> list)
+        public virtual int Delete<T>(IEnumerable<T> list)
+            where T : BaseEntity
         {
             try
             {
                 foreach (var entity in list)
                 {
-                    EFContext.Entry<T>(entity).State = EntityState.Deleted;
+                    context.Entry<T>(entity).State = EntityState.Deleted;
                 }
-                EFContext.SaveChanges();
-                return new EFResult();
+                return context.SaveChanges();
             }
-            catch (Exception ex)
+            catch (DbEntityValidationException dbEx)
             {
-                LogHelper.Error("删除实体集失败，错误原因：" + ex.Message);
-                return new EFResult("删除失败");
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
         }
 
         /// <summary>
-        /// 根据条件批量删除数据
+        /// 批量删除实体，不保存到数据库
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public virtual void DeleteNoSave<T>(IEnumerable<T> list)
+            where T : BaseEntity
+        {
+            foreach (var entity in list)
+            {
+                context.Entry<T>(entity).State = EntityState.Deleted;
+            }
+        }
+
+        /// <summary>
+        /// 根据条件批量删除实体
         /// </summary>
         /// <param name="lamda"></param>
         /// <returns></returns>
-        public virtual EFResult Delete(Expression<Func<T, bool>> lamda)
+        public virtual int Delete<T>(Expression<Func<T, bool>> lamda)
+            where T : BaseEntity
         {
             try
             {
-                var list = Entities.Where(lamda);
+                var list = context.Set<T>().Where(lamda);
                 foreach (var entity in list)
                 {
-                    EFContext.Entry<T>(entity).State = EntityState.Deleted;
+                    context.Entry<T>(entity).State = EntityState.Deleted;
                 }
-                EFContext.SaveChanges();
-                return new EFResult();
+                return context.SaveChanges();
             }
-            catch (Exception ex)
+            catch (DbEntityValidationException dbEx)
             {
-                LogHelper.Error("删除实体集失败，错误原因：" + ex.Message);
-                return new EFResult("删除失败");
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
+            }
+        }
+
+        /// <summary>
+        /// 根据条件批量删除实体，不保存到数据库
+        /// </summary>
+        /// <param name="lamda"></param>
+        /// <returns></returns>
+        public virtual void DeleteNoSave<T>(Expression<Func<T, bool>> lamda)
+            where T : BaseEntity
+        {
+            var list = context.Set<T>().Where(lamda);
+            foreach (var entity in list)
+            {
+                context.Entry<T>(entity).State = EntityState.Deleted;
             }
         }
 
@@ -350,30 +375,30 @@ namespace TS.Data
         /// 保存更改
         /// </summary>
         /// <returns></returns>
-        public virtual EFResult Save()
+        public virtual int Save()
         {
             try
             {
-                EFContext.SaveChanges();
-                return new EFResult();
+                return context.SaveChanges();
             }
-            catch (DbEntityValidationException ex)
+            catch (DbEntityValidationException dbEx)
             {
-                string str = "";
-                foreach (var i in ex.EntityValidationErrors)
-                {
-                    foreach (var j in i.ValidationErrors)
-                    {
-                        str += j.ErrorMessage + "，";
-                    }
-                }
-                LogHelper.Error("更新数据库失败，错误原因：" + str, ex);
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
-            catch (Exception ex)
-            {
-                LogHelper.Error("更新数据库失败，错误原因：" + ex.Message, ex);
-            }
-            return new EFResult("保存数据失败");
+        }
+
+        /// <summary>
+        /// 获取完整错误说明
+        /// </summary>
+        /// <param name="exc">Exception</param>
+        /// <returns>Error</returns>
+        protected string GetFullErrorText(DbEntityValidationException exc)
+        {
+            var msg = string.Empty;
+            foreach (var validationErrors in exc.EntityValidationErrors)
+                foreach (var error in validationErrors.ValidationErrors)
+                    msg += string.Format("字段名称: {0} 错误原因: {1}", error.PropertyName, error.ErrorMessage) + Environment.NewLine;
+            return msg;
         }
     }
 }

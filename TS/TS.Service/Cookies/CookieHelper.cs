@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Security;
 
-namespace TS.Service.Cookie
+namespace TS.Service.Cookies
 {
     public partial class CookieHelper
     {

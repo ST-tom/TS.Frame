@@ -50,9 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cookie\CookieHelper.cs" />
-    <Compile Include="EFRepository.cs" />
-    <Compile Include="EFResult.cs" />
+    <Compile Include="Cookies\CookieHelper.cs" />
+    <Compile Include="Https\HttpErrorHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

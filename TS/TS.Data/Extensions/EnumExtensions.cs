@@ -32,5 +32,29 @@ namespace TS.Data.Extensions
             }
             return attribute == null ? null : attribute.Description;
         }
+
+        public static Dictionary<int, string> EnumToDictonary<T>()
+        {
+            Dictionary<int, string> dic = new Dictionary<int, string>();
+            Type enumType = typeof(T);
+            var fieldstrs = Enum.GetNames(enumType);
+            foreach (var fieldstr in fieldstrs)
+            {
+                var field = enumType.GetField(fieldstr);
+                string description = string.Empty;
+                object[] arr = field.GetCustomAttributes(typeof(DescriptionAttribute), true);
+
+                if (arr != null && arr.Length > 0)
+                {
+                    description = ((DescriptionAttribute)arr[0]).Description;   //属性描述
+                }
+                else
+                {
+                    description = fieldstr;  //描述不存在取字段名称
+                }
+                dic.Add((int)Enum.Parse(enumType, fieldstr), description);
+            }
+            return dic;
+        }
     }
 }
