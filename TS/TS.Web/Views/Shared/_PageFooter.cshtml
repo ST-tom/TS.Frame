@@ -1,94 +1,20 @@
-﻿<div class="list-footer">
-    <nav id="footer" aria-label="Page navigation">
-        <ul class="pagination">
-            <li>
-                <a id="previous" href="javascript:void(0);" aria-label="Previous">
-                    <span aria-hidden="true"><<</span>
-                </a>
-            </li>
-            <li><a class="pageIndex" href="javascript:;">1</a></li>
-            <li><a class="pageIndex" href="javascript:;">2</a></li>
-            <li><a class="pageIndex" href="javascript:;">3</a></li>
-            <li><a class="pageIndex" href="javascript:;">4</a></li>
-            <li><a class="pageIndex" href="javascript:;">5</a></li>
-            <li>
-                <a id="next" href="javascript:void(0);" aria-label="Next">
-                    <span aria-hidden="true">>></span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</div>
+﻿@section scripts{
+    <script src="~/Content/js/pagination.js"></script> 
+}
+<div id="page_footer"></div>
 <script>
-    var page;
-    function initPageFooter(total, pageSize) {
-        var i = 1;
-        if (total % pageSize > 0) {
-            page = parseInt(total / pageSize) + 1;
-        } else {
-            page = parseInt(total / pageSize)
-        }
-
-        if (total == 0)
-            page = 1;
-
-        if (page == 1) {
-            $("#footer").hide();
-        } else {
-            $("#footer").show();
-        }
-
-
-        if (page <= 5) {
-            $("#next").hide();
-            $("#previous").hide();
-        }
-
-        $(".pageIndex").each(function () {
-            $(this).text(i);
-            if (i <= page) {
-                $(this).show();
-            } else {
-                $(this).hide();
+    /* $(function () {
+         demo
+        $('#page_footer').initPagenation({
+            totalCount: 100,     //数据总个数,
+            showBtnFirst: true,     //是否显示 首页按钮
+            showCount: 10,          //每页显示多少个,默认10个
+            showBtnsCount: 5,      //数字按钮数量,最多10个,默认10个
+            callback: function (pageIndex) {
+                console.log('你点击了第' + pageIndex + '页');
             }
-            i++;
         });
-        $(".list-footer").show();
-    }
-
-    $("#previous").click(function () {
-        if ($(".pageIndex").first().text() == "1") {
-            return false;
-        }
-        if (page > 0) {
-            $(".pageIndex").each(function () {
-                var num = parseInt($(this).text());
-                num -= 5;
-                $(this).text(num);
-                if (num <= page) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        }
-    });
-
-    $("#next").click(function () {
-        if (parseInt($(".pageIndex").last().text()) >= page) {
-            return false;
-        }
-        if (page > 0) {
-            $(".pageIndex").each(function () {
-                var num = parseInt($(this).text());
-                num += 5;
-                $(this).text(num);
-                if (num <= page) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        }
-    });
+    })
+    */
 </script>
+ 

@@ -31,7 +31,11 @@ namespace TS.Web.Controllers
 
         public void Export()
         {
-            XSSFWorkbook xk = new ExcelHelper().Export("sheet1",new string[] {"test1","test2","test3" },new string[] { "Name","Sex","Age"},new List<dynamic>().AsQueryable());
+            var cellHeard = new Dictionary<string, string>();
+            cellHeard.Add("test1", "Name");
+            cellHeard.Add("test2", "Sex");
+            cellHeard.Add("test3", "Name");
+            XSSFWorkbook xk = new ExcelHelper().Export("sheet1", cellHeard, new List<dynamic>().AsQueryable());
 
             //写入到客户端
             using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
