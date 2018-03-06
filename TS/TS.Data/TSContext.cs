@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using TS.Core.Domain.Orders;
 
 namespace TS.Data
 {
@@ -26,6 +27,8 @@ namespace TS.Data
         {
 
         }
+
+        //public virtual DbSet<Order> Order { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

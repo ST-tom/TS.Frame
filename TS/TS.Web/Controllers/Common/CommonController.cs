@@ -7,8 +7,9 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using TS.Service.Files;
+using TS.Web.Controllers.Base;
 
-namespace TS.Web.Controllers
+namespace TS.Web.Controllers.Common
 {
     public class CommonController : BaseController
     {

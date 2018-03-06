@@ -48,7 +48,7 @@ namespace TS.Data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static Expression<Func<T, bool>> ExpressionTrue<T>()
+        public Expression<Func<T, bool>> ExpressionTrue<T>()
         {
             return DynamicLinqExpressions.True<T>();
         }
@@ -58,7 +58,7 @@ namespace TS.Data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static Expression<Func<T, bool>> ExpressionFalse<T>()
+        public Expression<Func<T, bool>> ExpressionFalse<T>()
         {
             return DynamicLinqExpressions.False<T>();
         }

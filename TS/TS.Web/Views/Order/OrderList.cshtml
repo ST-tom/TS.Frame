@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "OrderList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Content/js/TSList.js"></script>
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 col-md-offset-1">
+            <div class="form-group">
+                <label for="CustomerName"></label>
+                <input type="text" class="form-control search-input" id="CustomerName" name="CustomerName" placeholder="客户姓名">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <td>订单编号</td>
+                        <td>顾客姓名</td>
+                        <td>价格</td>
+                        <td>创建时间</td>
+                    </tr>
+                </thead>
+                <tbody id="order-list">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div id="footer" class="pull-right"></div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var TSList = $("#order-list").TSList({
+            getPageListDataUrl: "@Url.Action("OrderPageList","Order")",
+            searchEleClass: "search-input",
+            footerContainerId: "footer",
+        });
+    })
+</script>
+
