@@ -28,7 +28,7 @@ namespace TS.Data
 
         }
 
-        //public virtual DbSet<Order> Order { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

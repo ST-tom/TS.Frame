@@ -42,7 +42,7 @@
 	            this.defaultErrorShow(that, "获取数据失败");
 	        } else {
 	            that.element.empty();
-	            that.element.append(dat.listHtml);
+	            that.element.append(data.htmlStr);
 	        }
 	    },
 	    defaultErrorShow:function(that,errmsg){
@@ -68,11 +68,13 @@
 	        this.initBtn(that);
 	    },
 	    initBtn: function (that) {
+	        var $footer = $("#" + that.options.footerContainerId + "");
+
 	        that.options.pageCount = Math.ceil(that.options.totalCount / that.options.pageSize);
 	        var pageShowCount = that.options.pageCount <= that.options.footerMaxPageShowSize ? that.options.pageCount : that.options.footerMaxPageShowSize;
 
 	        docFragment = document.createDocumentFragment();
-	        for (var i = 1; i <= btnShowCount; i++) {
+	        for (var i = 1; i <= pageShowCount; i++) {
 	            var aNode = document.createElement('a');
 	            aNode.setAttribute('href', 'javascript:;');
 	            aNode.innerHTML = i + '';
@@ -81,9 +83,9 @@
 	                aNode.setAttribute('class', 'active');
 	            }
 	        }
-	        var html = '<span class="totalPage">共 ' + pages + ' 页</span>';
-	        $pageBox.find('.pre-page').after(docFragment);
-	        $pageBox.find('.last-page').after(html);
+	        var html = '<span class="totalPage">共 ' + that.options.pageCount + ' 页</span>';
+	        $footer.find('.pre-page').after(docFragment);
+	        $footer.find('.last-page').after(html);
 
 	        this.bindFooterEvent(that);
 	    },
@@ -144,10 +146,10 @@
 	                }
 
 	                that.options.pageIndex = turnto;
-	                that.switchIndex(that);
+	                methods.switchIndex(that);
 	            });
 	        } else {
-	            $footer.find(".confirm, .turn").hide();
+	            $footer.find(".confirm, .turnTo").hide();
 	        }
 	    },
 	    switchIndex: function (that) {
@@ -156,11 +158,12 @@
 	    },
 	    handleIndex: function (that) {
 	        var pageCount = that.options.pageCount,
+                index = that.options.pageIndex,
                 startIndex = 0,
                 endIndex = 0,
                 rightCount = parseInt(that.options.btnShowCount / 2),
                 footerMaxPageShowSize = that.options.footerMaxPageShowSize,
-                $pageItem = $("#" + that.options.footerContainerId + "").find("a");
+                $pageItems = $("#" + that.options.footerContainerId + "").find("a");
 
 	        if (pageCount > footerMaxPageShowSize) {
 	            if (index + rightCount <= pagesCount) {
@@ -188,6 +191,13 @@
 	        that.options.pageCount = Math.ceil(that.options.totalCount / that.options.pageSize);
 	        $("#" + that.options.footerContainerId + "").find(".totalPage").html("共" + that.pageCount + "页");
 	        this.handleIndex(that);
+	    },
+	    hasValue: function (data) {
+	        if (data != null && data != "" && data != undefined) {
+	            return true;
+	        } else {
+	            return false;
+	        }
 	    }
 	}
 
@@ -209,13 +219,13 @@
         //绑定事件（搜索）
 	    bindEvent: function () {
 	        var that = this;
-	        if (!that.options.searchBtnId) {
+	        if (method.hasValue(that.options.searchBtnId)) {
 	            $("#" + that.options.searchBtnId + "").bind("click", function () {
 	                that.getData(that,true);
 	            });
 	        }
 	        if (that.options.searchEleChangeEvent) {
-	            if (!that.options.searchEleClass) {
+	            if (method.hasValue(that.options.searchEleClass)) {
 	                $("." + that.options.searchEleClass + "").bind("change", function () {
 	                    that.getData(that, true);
 	                });
@@ -230,6 +240,7 @@
 	        $.ajax({
 	            url: that.options.getPageListDataUrl,
 	            type: "get",
+	            async: false,
 	            data: that.getSearchData(),
 	            beforeSend: function () {
 	                that.beforeSend();
@@ -237,8 +248,8 @@
 	            success: function (data) {
 	                that.success(data);
 	                if (needRefresh) {
-	                    if (!data.totalCount && data.totalCount != 0) {
-	                        that.options.totalCount = data.total;
+	                    if (method.hasValue(data.totalCount) && data.totalCount != 0) {
+	                        that.options.totalCount = data.totalCount;
 	                        method.updatePageCount(that);
 	                    }
 	                }
@@ -254,7 +265,7 @@
 	    getSearchData: function () {
 	        var searchData = {};
 
-	        if (!this.options.searchEleClass) {
+	        if (method.hasValue(this.options.searchEleClass)) {
 	            $("." + this.options.searchEleClass).each(function () {
 	                var type = $(this).attr("type");
 	                if (type == "radio" || type == "checkbox") {
@@ -283,25 +294,25 @@
 	    extendSerialize: function (searchData) {
 	        if ($.isFunction(this.options.extendSerialize)) {
 	            this.options.extendSerialize(searchData);
-	        } else if(!this.options.extendSerialize) {
+	        } else if(method.hasValue(this.options.extendSerialize)) {
 	            $.extend(searchData, this.options.extendSerialize);
 	        }
 	        return searchData;
 	    },
 	    beforeSend: function () {
-	        if (!$.isFunction(this.options.beforeSend)) {
+	        if ($.isFunction(this.options.beforeSend)) {
 	            this.options.beforeSend();
 	        }
 	    },
 	    success: function (data) {
-	        if (!$.isFunction(this.options.success)) {
+	        if ($.isFunction(this.options.success)) {
 	            this.options.success(data);
 	        } else {
 	            method.defaultSuccess(data,this);
 	        }
 	    },
 	    error: function () {
-	        if (!$.isFunction(this.options.error)) {
+	        if ($.isFunction(this.options.error)) {
 	            this.options.error();
 	        } else {
 	            method.defaultErrorShow(this,"获取数据失败");
@@ -309,7 +320,7 @@
 	        return false;
 	    },
 	    complete: function () {
-	        if (!$.isFunction(this.options.complete)) {
+	        if ($.isFunction(this.options.complete)) {
 	            this.options.complete();
 	        }
 	    },
