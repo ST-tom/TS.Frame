@@ -1,39 +1,67 @@
 ﻿; (function ($, window, document, undefined){
-	var defaults = {
-	    getPageListDataUrl: "",
-	    pageIndex: 1,
-	    pageSize: 10,
-	    searchBtnId: "",
-	    searchEleClass: "",
-	    searchEleChangeEvent: true,
-	    extendSerialize: null,
-	    afterSuccess: null,
-	    beforeSend: null,
-	    error: null,
-	    complete: null,
+    var defaults = {
+        getPageListDataUrl: "",
+        pageIndex: 1,
+        pageSize: 10,
+        searchBtnId: "",
+        searchEleClass: "",
+        searchEleChangeEvent: true,
+        extendSerialize: null,
+        afterSuccess: null,
+        beforeSend: null,
+        error: null,
+        complete: null,
         errorShow:null,
-	}
+    }
 
     //页脚属性
-	var footerConfig = {
-	    footerContainerId: "",
-	    footerMaxPageShowSize: 5,
-	    footerFirstBtnShow: true,
-	    footerTurnBtnShow: false,
-	    totalCount: null,
-        pageCount : null,
-	    footerHtml: [
-                    '<span class="link-wrapper">',
-                    '<span class="first-page text">首页</span>',
-                    '<span class="pre-page text"><上一页</span>',
-                    '<span class="next-page text">下一页></span>',
-                    '<span class="last-page text">尾页</span>',
-                    '<span class="turnTo"> 第 <input type="test"> 页</span>',
-                    '<span class="confirm">确定</span>',
-                    '</span>'
-
-	    ].join(''),
-	} 
+    var footerConfig = {
+        footerContainerId: "",
+        footerMaxPageShowSize: 5,
+        footerFirstBtnShow: true,
+        footerTurnBtnShow: false,
+        totalCount: null,
+        pageCount: null,
+        footerHtml: [
+            '<nav aria-label="Page navigation">',
+                '<ul class="pagination">',
+                    '<li class="first-page">',
+                        '<a href="javascription:void(0)">',
+                            '<span>首页</span>',
+                        '</a>',
+                    '</li>',
+                    '<li class="pre-page">',
+                        '<a href="javascription:void(0)">',
+                            '<span>上一页</span>',
+                        '</a>',
+                    '</li>',
+                    '<li class="next-page">',
+                        '<a href="javascription:void(0)">',
+                            '<span>下一页</span>',
+                        '</a>',
+                    '</li>',
+                    '<li class="last-page">',
+                        '<a href="javascription:void(0)">',
+                            '<span>尾页</span>',
+                        '</a>',
+                    '</li>',
+                    '<li class="turn">',
+                        '<span class="input-group" style="margin-left:15px;border:0;padding:0">',
+                            '<input class="turnTo form-control" type="text" class="form-control" style="width:50px">',
+                        '</span>',
+                    '</li>',
+                    '<li class="turn">',
+                        '<span style="background-color:#eee;color:#555">页</span>',
+                    '</li>',
+                    '<li class="confirm">',
+                        '<a href="javascription:void(0)">',
+                            '<span>确认</span>',
+                        '</a>',
+                    '</li>',
+                '</ul>',
+            '</nav>',
+        ].join(''),
+    }
 
     //私有方法
 	var method = {
@@ -75,15 +103,21 @@
 
 	        docFragment = document.createDocumentFragment();
 	        for (var i = 1; i <= pageShowCount; i++) {
-	            var aNode = document.createElement('a');
-	            aNode.setAttribute('href', 'javascript:;');
-	            aNode.innerHTML = i + '';
-	            docFragment.appendChild(aNode);
-	            if (i === 1) {
-	                aNode.setAttribute('class', 'active');
+	            var li = document.createElement('li');
+	            var a = document.createElement('a');
+
+	            a.innerHTML = i + '';
+	            a.setAttribute("href", "javascription:void(0)")
+	            if(i == 1){
+	                li.setAttribute('class','page-text active');
+	            } else {
+	                li.setAttribute('class', 'page-text');
 	            }
+
+	            li.appendChild(a);
+	            docFragment.appendChild(li);
 	        }
-	        var html = '<span class="totalPage">共 ' + that.options.pageCount + ' 页</span>';
+	        var html = '<li><span class="totalPage" style="background-color:#eee;color:#555">共 ' + that.options.pageCount + ' 页</span></div></li>';
 	        $footer.find('.pre-page').after(docFragment);
 	        $footer.find('.last-page').after(html);
 
@@ -93,9 +127,9 @@
 	        var $footer = $("#" + that.options.footerContainerId + "");
 	        var methods = this;
             //点击页面
-	        $footer.on('click', 'a', function () {
-	            $(this).addClass('active').siblings('a').removeClass('active');
-	            var index = window.parseInt(this.innerHTML);
+	        $footer.on('click', '.page-text', function () {
+	            $(this).addClass('active').siblings('.page-text').removeClass('active');
+	            var index = window.parseInt($(this).find('a').text());
 	            that.options.pageIndex = index;
 	            methods.switchIndex(that);
 	        });
@@ -130,7 +164,8 @@
 	        //调整按钮
 	        if (that.options.footerTurnBtnShow) {
 	            $footer.on('click', '.confirm', function () {
-	                var turnto = $footer.find(".turnTo input").val();
+	                var turnto = $footer.find(".turnTo").val();
+	                $footer.find(".turnTo").val('');
 
 	                if (!(parseInt(turnto) == turnto)) {
 	                    errPromot("请输入整数");
@@ -149,7 +184,7 @@
 	                methods.switchIndex(that);
 	            });
 	        } else {
-	            $footer.find(".confirm, .turnTo").hide();
+	            $footer.find(".confirm, .turn").hide();
 	        }
 	    },
 	    switchIndex: function (that) {
@@ -163,7 +198,7 @@
                 endIndex = 0,
                 rightCount = parseInt(that.options.btnShowCount / 2),
                 footerMaxPageShowSize = that.options.footerMaxPageShowSize,
-                $pageItems = $("#" + that.options.footerContainerId + "").find("a");
+                $pageItems = $("#" + that.options.footerContainerId + "").find(".page-text");
 
 	        if (pageCount > footerMaxPageShowSize) {
 	            if (index + rightCount <= pagesCount) {
@@ -174,15 +209,15 @@
 	            endIndex = endIndex < showBtnsCount ? showBtnsCount : endIndex;//左侧开始的负数
 	            startIndex = endIndex - showBtnsCount + 1;
 	            $pageItems.each(function (index2) {
-	                $(this).html(startIndex + index2);
+	                $(this).find('a').text(startIndex + index2);
 	                if (startIndex + index2 === index) {
-	                    $(this).addClass('active').siblings('a').removeClass('active');
+	                    $(this).addClass('active').siblings('.page-text').removeClass('active');
 	                }
 	            });
 	        } else {
 	            $pageItems.each(function (index2) {
 	                if (index2 + 1 == index) {
-	                    $(this).addClass('active').siblings('a').removeClass('active');
+	                    $(this).addClass('active').siblings('.page-text').removeClass('active');
 	                }
 	            });
 	        }
