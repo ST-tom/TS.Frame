@@ -1,0 +1,100 @@
+﻿.page-footer {
+    display: inline-block;
+    padding-top: 20px;
+    padding-right: 100px;
+    position: absolute;
+    right: 0px;
+    bottom: 30px;
+}
+
+    .page-footer span {
+        padding: 0 15px;
+        border: 1px solid #E4E7F0;
+        display: inline-block;
+        box-sizing: content-box;
+        height: 30px;
+        border-left: none;
+        vertical-align: middle;
+        font-size: 12px;
+        line-height: 30px;
+        font-weight: normal;
+        color: #393946;
+        cursor: pointer;
+    }
+
+    .page-footer a {
+        border: 1px solid #E4E7F0;
+        display: inline-block;
+        box-sizing: content-box;
+        height: 30px;
+        width:30px;
+        text-align:center;
+        border-left: none;
+        vertical-align: middle;
+        font-size: 12px;
+        line-height: 30px;
+        font-weight: normal;
+        text-decoration: none;
+        color: #393946;
+        cursor: pointer;
+    }
+
+    .page-footer span.first-page {
+        border-left: 1px solid #E4E7F0;
+        border-top-left-radius: 6px;
+        border-bottom-left-radius: 6px;
+    }
+
+    .page-footer span.last-page {
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+    }
+
+    .page-footer span:hover {
+        color: #3b7ed4;
+        border: 1px solid #3b7ed4;
+    }
+
+    .page-footer span:hover, a:hover {
+        color: #3b7ed4;
+        border: 1px solid #3b7ed4;
+    }
+
+    .page-footer a:active {
+        color: #0078D7;
+    }
+
+    .page-footer span.totalPage {
+        border: 0;
+    }
+
+        .page-footer span.totalPage:hover {
+            color: #393946;
+        }
+
+    .page-footer span.turnTo {
+        border: 0;
+        padding: 0 10px;
+    }
+
+        .page-footer span.turnTo:hover {
+            color: #393946;
+        }
+
+        .page-footer span.turnTo input {
+            width: 32px;
+            height: 24px;
+            margin: 0 5px;
+            padding-left: 5px;
+            border: 1px solid #E4E7F0;
+        }
+
+    .page-footer span.confirm {
+        width: 36px;
+        height: 30px;
+        background: #0078D7;
+        margin-left: 10px;
+        border-radius: 2px;
+        color: #fff;
+        text-align: center;
+    }

@@ -139,6 +139,8 @@
     <Content Include="Content\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\bootstrap\js\npm.js" />
     <Content Include="Content\bootstrap\version-3.3.7.txt" />
+    <Content Include="Content\css\common.css" />
+    <Content Include="Content\css\page-footer.css" />
     <Content Include="Content\js\jquery-3.3.1.min.js" />
     <Content Include="Content\js\pagination.js" />
     <Content Include="ErrorPage.htm" />
@@ -212,7 +214,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>47523</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:47523/</IISUrl>
+          <IISUrl>http://localhost:15333/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -23,43 +23,16 @@
         totalCount: null,
         pageCount: null,
         footerHtml: [
-            '<nav aria-label="Page navigation">',
-                '<ul class="pagination">',
-                    '<li class="first-page">',
-                        '<a href="javascription:void(0)">',
-                            '<span>首页</span>',
-                        '</a>',
-                    '</li>',
-                    '<li class="pre-page">',
-                        '<a href="javascription:void(0)">',
-                            '<span>上一页</span>',
-                        '</a>',
-                    '</li>',
-                    '<li class="next-page">',
-                        '<a href="javascription:void(0)">',
-                            '<span>下一页</span>',
-                        '</a>',
-                    '</li>',
-                    '<li class="last-page">',
-                        '<a href="javascription:void(0)">',
-                            '<span>尾页</span>',
-                        '</a>',
-                    '</li>',
-                    '<li class="turn">',
-                        '<span class="input-group" style="margin-left:15px;border:0;padding:0">',
-                            '<input class="turnTo form-control" type="text" class="form-control" style="width:50px">',
-                        '</span>',
-                    '</li>',
-                    '<li class="turn">',
-                        '<span style="background-color:#eee;color:#555">页</span>',
-                    '</li>',
-                    '<li class="confirm">',
-                        '<a href="javascription:void(0)">',
-                            '<span>确认</span>',
-                        '</a>',
-                    '</li>',
-                '</ul>',
-            '</nav>',
+            '<span class="page-footer">',
+                '<span class="first-page">首页</span>',
+                '<span class="pre-page">上一页</span>',
+                '<span class="next-page">下一页</span>',
+                '<span class="last-page">尾页</span>',
+                '<span class="turnTo">',
+                    '第<input type="text" />页',
+                '</span>',
+                '<span class="confirm">确认</span>',              
+            '</span>',
         ].join(''),
     }
 
@@ -103,21 +76,17 @@
 
 	        docFragment = document.createDocumentFragment();
 	        for (var i = 1; i <= pageShowCount; i++) {
-	            var li = document.createElement('li');
-	            var a = document.createElement('a');
+	            var aNode = document.createElement('a');
 
-	            a.innerHTML = i + '';
-	            a.setAttribute("href", "javascription:void(0)")
+	            aNode.innerHTML = i + '';
+	            aNode.setAttribute("href", "javascription:void(0)")
 	            if(i == 1){
-	                li.setAttribute('class','page-text active');
-	            } else {
-	                li.setAttribute('class', 'page-text');
-	            }
+	                aNode.setAttribute('class', 'active');
+	            } 
 
-	            li.appendChild(a);
-	            docFragment.appendChild(li);
+	            docFragment.appendChild(aNode);
 	        }
-	        var html = '<li><span class="totalPage" style="background-color:#eee;color:#555">共 ' + that.options.pageCount + ' 页</span></div></li>';
+	        var html = '<span class="totalPage">共 ' + that.options.pageCount + ' 页</span>';
 	        $footer.find('.pre-page').after(docFragment);
 	        $footer.find('.last-page').after(html);
 
@@ -127,9 +96,9 @@
 	        var $footer = $("#" + that.options.footerContainerId + "");
 	        var methods = this;
             //点击页面
-	        $footer.on('click', '.page-text', function () {
-	            $(this).addClass('active').siblings('.page-text').removeClass('active');
-	            var index = window.parseInt($(this).find('a').text());
+	        $footer.on('click', 'a', function () {
+	            $(this).addClass('active').siblings('a').removeClass('active');
+	            var index = window.parseInt($(this).text());
 	            that.options.pageIndex = index;
 	            methods.switchIndex(that);
 	        });
@@ -164,8 +133,8 @@
 	        //调整按钮
 	        if (that.options.footerTurnBtnShow) {
 	            $footer.on('click', '.confirm', function () {
-	                var turnto = $footer.find(".turnTo").val();
-	                $footer.find(".turnTo").val('');
+	                var turnto = $footer.find(".turnTo input").val();
+	                $footer.find(".turnTo input").val('');
 
 	                if (!(parseInt(turnto) == turnto)) {
 	                    errPromot("请输入整数");
@@ -198,7 +167,7 @@
                 endIndex = 0,
                 rightCount = parseInt(that.options.btnShowCount / 2),
                 footerMaxPageShowSize = that.options.footerMaxPageShowSize,
-                $pageItems = $("#" + that.options.footerContainerId + "").find(".page-text");
+                $pageItems = $("#" + that.options.footerContainerId + "").find("a");
 
 	        if (pageCount > footerMaxPageShowSize) {
 	            if (index + rightCount <= pagesCount) {
@@ -211,13 +180,13 @@
 	            $pageItems.each(function (index2) {
 	                $(this).find('a').text(startIndex + index2);
 	                if (startIndex + index2 === index) {
-	                    $(this).addClass('active').siblings('.page-text').removeClass('active');
+	                    $(this).addClass('active').siblings('a').removeClass('active');
 	                }
 	            });
 	        } else {
 	            $pageItems.each(function (index2) {
 	                if (index2 + 1 == index) {
-	                    $(this).addClass('active').siblings('.page-text').removeClass('active');
+	                    $(this).addClass('active').siblings('a').removeClass('active');
 	                }
 	            });
 	        }
