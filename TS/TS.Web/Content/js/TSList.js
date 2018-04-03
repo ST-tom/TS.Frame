@@ -60,10 +60,6 @@
 	            return false;
 	        }
 	        var $footer = $("#" + that.options.footerContainerId + "");
-	        if (!that.options.totalCount || that.options.totalCount == 0)
-	        {
-	            $footer.hide();
-	        }
 	        $footer.append(that.options.footerHtml);
 
 	        this.initBtn(that);
@@ -91,6 +87,7 @@
 	        $footer.find('.last-page').after(html);
 
 	        this.bindFooterEvent(that);
+	        method.switchIndex(that);
 	    },
 	    bindFooterEvent: function (that) {
 	        var $footer = $("#" + that.options.footerContainerId + "");
@@ -161,6 +158,13 @@
 	        this.handleIndex(that);
 	    },
 	    handleIndex: function (that) {
+	        $footer = $("#" + that.options.footerContainerId + "");
+	        if (that.options.totalCount == 0) {
+	            $footer.hide();
+	        } else {
+	            $footer.show();
+	        }
+
 	        var pageCount = that.options.pageCount,
                 index = that.options.pageIndex,
                 startIndex = 0,
@@ -193,7 +197,7 @@
 	    },
 	    updatePageCount: function (that) {
 	        that.options.pageCount = Math.ceil(that.options.totalCount / that.options.pageSize);
-	        $("#" + that.options.footerContainerId + "").find(".totalPage").html("共" + that.pageCount + "页");
+	        $("#" + that.options.footerContainerId + "").find(".totalPage").html("共" + that.options.pageCount + "页");
 	        this.handleIndex(that);
 	    },
 	    hasValue: function (data) {
@@ -252,7 +256,7 @@
 	            success: function (data) {
 	                that.success(data);
 	                if (needRefresh) {
-	                    if (method.hasValue(data.totalCount) && data.totalCount != 0) {
+	                    if (data.result) {
 	                        that.options.totalCount = data.totalCount;
 	                        method.updatePageCount(that);
 	                    }
@@ -328,11 +332,11 @@
 	            this.options.complete();
 	        }
 	    },
-	    refreshFooter: function () {
+	    refreshFooter: function (needRefresh) {
 	        this.options.totalCount = null;
 	        this.options.pageIndex = 1;
 
-	        this.getData(this);
+	        this.getData(this, needRefresh);
 	    }
 
 	}
