@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using TS.Service.Files;
+using TS.Data.Helper;
 using TS.Web.Controllers.Base;
 
 namespace TS.Web.Controllers.Common

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using TS.Core.Log;
+using TS.Data.Helper;
 
 namespace TS.Web.Filters
 {

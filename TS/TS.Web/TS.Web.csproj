@@ -168,7 +168,7 @@
     <Content Include="Views\Common\PageNotFound.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_PageFooter.cshtml" />
-    <Content Include="Content\js\TSList.js" />
+    <Content Include="Content\js\ts.list.js" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap\css\bootstrap.css.map" />
@@ -193,6 +193,10 @@
     <ProjectReference Include="..\TS.Core\TS.Core.csproj">
       <Project>{093a2ddd-b68b-4491-b717-d5ad64e46d52}</Project>
       <Name>TS.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TS.Data\TS.Data.csproj">
+      <Project>{1DD913B4-3233-4672-8BC5-AE7B2BA26D92}</Project>
+      <Name>TS.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\TS.Service\TS.Service.csproj">
       <Project>{bd105513-4eea-429b-a6b7-964eb37735a4}</Project>

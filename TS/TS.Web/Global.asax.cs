@@ -3,8 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Http;
-using TS.Core.Log;
-using TS.Service.Https;
+using TS.Data.Helper;
 
 namespace TS.Web
 {
@@ -30,7 +29,7 @@ namespace TS.Web
             {
                 if (httpException.GetHttpCode() == 404)
                 {
-                    if (!HttpErrorHelper.IsStaticResource(this.Request))
+                    if (!HttpHelper.IsStaticResource(this.Request))
                     {
                         Server.ClearError();
                         Response.TrySkipIisCustomErrors = true;
