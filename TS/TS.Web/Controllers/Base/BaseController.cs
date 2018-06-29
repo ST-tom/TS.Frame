@@ -8,7 +8,7 @@ using TS.Web.Filters;
 
 namespace TS.Web.Controllers.Base
 {
-    [HttpExceptionFilter]
+    [HttpException]
     public class BaseController : Controller
     {
         protected JsonResult NoAuthorityJson(string errmsg = "无操作权限")

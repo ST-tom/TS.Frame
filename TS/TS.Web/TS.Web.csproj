@@ -154,7 +154,7 @@
     <Compile Include="Controllers\Base\BaseController.cs" />
     <Compile Include="Controllers\Common\CommonController.cs" />
     <Compile Include="Controllers\Orders\OrderController.cs" />
-    <Compile Include="Filters\HttpExceptionFilter.cs" />
+    <Compile Include="Filters\HttpExceptionAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

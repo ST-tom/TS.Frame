@@ -63,9 +63,12 @@
 	        $footer.append(that.options.footerHtml);
 
 	        this.initBtn(that);
+	        this.bindFooterEvent(that);
 	    },
 	    initBtn: function (that) {
 	        var $footer = $("#" + that.options.footerContainerId + "");
+	        $footer.find("a").remove();
+	        $footer.find(".totalPage").remove();
 
 	        that.options.pageCount = Math.ceil(that.options.totalCount / that.options.pageSize);
 	        var pageShowCount = that.options.pageCount <= that.options.footerMaxPageShowSize ? that.options.pageCount : that.options.footerMaxPageShowSize;
@@ -86,7 +89,6 @@
 	        $footer.find('.pre-page').after(docFragment);
 	        $footer.find('.last-page').after(html);
 
-	        this.bindFooterEvent(that);
 	        method.switchIndex(that);
 	    },
 	    bindFooterEvent: function (that) {
@@ -109,7 +111,7 @@
 	        $footer.on('click', '.next-page', function () {
 	            var index = that.options.pageIndex;
 	            index++;
-	            that.options.pageIndex = index > that.options.pagesCount ? that.options.pagesCount : index;
+	            that.options.pageIndex = index > that.options.pageCount ? that.options.pageCount : index;
 	            methods.switchIndex(that);
 	        });
 
@@ -134,15 +136,15 @@
 	                $footer.find(".turnTo input").val('');
 
 	                if (!(parseInt(turnto) == turnto)) {
-	                    errPromot("请输入整数");
+	                    methods.defaultErrorShow(that,"请输入整数");
 	                    return false;
 	                }
 	                if (isNaN(turnto)) {
-	                    errPromot("请输入整数");
+	                    methods.defaultErrorShow(that, "请输入整数");
 	                    return false;
 	                }
 	                if ((turnto > that.options.pageCount) || (turnto < 1)) {
-	                    errPromot("输入的页码超出范围");
+	                    methods.defaultErrorShow(that, "输入的页码超出范围");
 	                    return false;
 	                }
 
@@ -169,20 +171,20 @@
                 index = that.options.pageIndex,
                 startIndex = 0,
                 endIndex = 0,
-                rightCount = parseInt(that.options.btnShowCount / 2),
+                rightCount = parseInt(that.options.footerMaxPageShowSize / 2),
                 footerMaxPageShowSize = that.options.footerMaxPageShowSize,
                 $pageItems = $("#" + that.options.footerContainerId + "").find("a");
 
 	        if (pageCount > footerMaxPageShowSize) {
-	            if (index + rightCount <= pagesCount) {
+	            if (index + rightCount <= pageCount) {
 	                endIndex = index + rightCount;
 	            } else {
-	                endIndex = pagesCount;
+	                endIndex = pageCount;
 	            }
-	            endIndex = endIndex < showBtnsCount ? showBtnsCount : endIndex;//左侧开始的负数
-	            startIndex = endIndex - showBtnsCount + 1;
+	            endIndex = endIndex < footerMaxPageShowSize ? footerMaxPageShowSize : endIndex;//左侧开始的负数
+	            startIndex = endIndex - footerMaxPageShowSize + 1;
 	            $pageItems.each(function (index2) {
-	                $(this).find('a').text(startIndex + index2);
+	                $(this).text(startIndex + index2);
 	                if (startIndex + index2 === index) {
 	                    $(this).addClass('active').siblings('a').removeClass('active');
 	                }
@@ -194,11 +196,6 @@
 	                }
 	            });
 	        }
-	    },
-	    updatePageCount: function (that) {
-	        that.options.pageCount = Math.ceil(that.options.totalCount / that.options.pageSize);
-	        $("#" + that.options.footerContainerId + "").find(".totalPage").html("共" + that.options.pageCount + "页");
-	        this.handleIndex(that);
 	    },
 	    hasValue: function (data) {
 	        if (data != null && data != "" && data != undefined) {
@@ -258,7 +255,7 @@
 	                if (needRefresh) {
 	                    if (data.result) {
 	                        that.options.totalCount = data.totalCount;
-	                        method.updatePageCount(that);
+	                        method.initBtn(that);
 	                    }
 	                }
 	            },

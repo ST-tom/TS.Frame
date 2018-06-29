@@ -8,7 +8,7 @@ using TS.Data.Helper;
 namespace TS.Web.Filters
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
-    public class HttpExceptionFilter : FilterAttribute, IExceptionFilter
+    public class HttpExceptionAttribute : FilterAttribute, IExceptionFilter
     {
         public virtual void OnException(ExceptionContext filterContext)
         {

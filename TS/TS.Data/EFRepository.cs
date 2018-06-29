@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TS.Core;
+using TS.Data.Helper;
 
 namespace TS.Data
 {
@@ -26,7 +27,7 @@ namespace TS.Data
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public virtual IQueryable<T> Table<T>()
-            where T : BaseEntity
+            where T : class
         {
             return context.Set<T>();
         }
@@ -37,7 +38,7 @@ namespace TS.Data
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public virtual IQueryable<T> TableNoTracking<T>()
-            where T : BaseEntity
+            where T : class
         {
             return context.Set<T>().AsNoTracking();
         }
@@ -72,8 +73,8 @@ namespace TS.Data
         /// <param name="whereLamda">过滤条件</param>
         /// <param name="orderByLamda">排序字段</param>
         /// <returns></returns>
-        public virtual PagedList<T> GetPagedData<T,TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLamda, Expression<Func<T, TKey>> orderByLamda)
-            where T : BaseEntity
+        public virtual PagedList<T> GetPagedData<T, TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLamda, Expression<Func<T, TKey>> orderByLamda)
+            where T : class
         {
             var list = context.Set<T>().Where(whereLamda).OrderBy(orderByLamda);
             return new PagedList<T>(list, pageIndex, pageSize);
@@ -89,8 +90,8 @@ namespace TS.Data
         /// <param name="whereLamda">过滤条件</param>
         /// <param name="orderByDesLamda">排序字段</param>
         /// <returns></returns>
-        public virtual PagedList<T> GetPageDataDes<T,TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLamda, Expression<Func<T, TKey>> orderByDesLamda)
-            where T : BaseEntity
+        public virtual PagedList<T> GetPagedDataDes<T, TKey>(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLamda, Expression<Func<T, TKey>> orderByDesLamda)
+            where T : class
         {
             var list = context.Set<T>().Where(whereLamda).OrderByDescending(orderByDesLamda);
             return new PagedList<T>(list, pageIndex, pageSize);
@@ -102,7 +103,7 @@ namespace TS.Data
         /// <param name="id"></param>
         /// <returns></returns>
         public virtual T GetById<T>(int id)
-            where T : BaseEntity
+            where T : class
         {
             return context.Set<T>().Find(id);
         }
@@ -114,7 +115,7 @@ namespace TS.Data
         /// <param name="whereLamda"></param>
         /// <returns></returns>
         public virtual T Get<T>(Expression<Func<T, bool>> Lamda)
-            where T : BaseEntity
+            where T : class
         {
             return context.Set<T>().FirstOrDefault(Lamda);
         }
@@ -125,7 +126,7 @@ namespace TS.Data
         /// <param name="Lamda"></param>
         /// <returns></returns>
         public virtual IQueryable<T> GetMany<T>(Expression<Func<T, bool>> Lamda)
-            where T : BaseEntity
+            where T : class
         {
             return context.Set<T>().Where(Lamda);
         }
@@ -136,17 +137,24 @@ namespace TS.Data
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual int Update<T>(T entity)
-            where T : BaseEntity
+        public virtual BaseResult Update<T>(T entity)
+            where T : class
         {
             try
             {
                 context.Entry(entity).State = EntityState.Modified;
-                return context.SaveChanges();
+                context.SaveChanges();
+                return new BaseResult();
             }
             catch (DbEntityValidationException dbEx)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                LogHelper.Error(GetFullErrorText(dbEx), dbEx);
+                return new BaseResult("更新失败");
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error(ex.Message, ex);
+                return new BaseResult("更新失败");
             }
         }
 
@@ -156,7 +164,7 @@ namespace TS.Data
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         public virtual void UpdateNoSave<T>(T entity)
-            where T : BaseEntity
+            where T : class
         {
             context.Entry(entity).State = EntityState.Modified;
         }
@@ -167,8 +175,8 @@ namespace TS.Data
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public virtual int Update<T>(IEnumerable<T> list)
-            where T : BaseEntity
+        public virtual BaseResult Update<T>(IEnumerable<T> list)
+            where T : class
         {
             try
             {
@@ -176,11 +184,18 @@ namespace TS.Data
                 {
                     context.Entry(entity).State = EntityState.Modified;
                 }
-                return context.SaveChanges();
+                context.SaveChanges();
+                return new BaseResult();
             }
             catch (DbEntityValidationException dbEx)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                LogHelper.Error(GetFullErrorText(dbEx), dbEx);
+                return new BaseResult("更新失败");
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error(ex.Message, ex);
+                return new BaseResult("更新失败");
             }
         }
 
@@ -190,7 +205,7 @@ namespace TS.Data
         /// <param name="list"></param>
         /// <returns></returns>
         public virtual void UpdateNoSave<T>(IEnumerable<T> list)
-            where T : BaseEntity
+            where T : class
         {
             foreach (var entity in list)
             {
@@ -204,17 +219,24 @@ namespace TS.Data
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual int Insert<T>(T entity)
-            where T : BaseEntity
+        public virtual BaseResult Insert<T>(T entity)
+            where T : class
         {
             try
             {
                 context.Entry(entity).State = EntityState.Added;
-                return context.SaveChanges();
+                context.SaveChanges();
+                return new BaseResult();
             }
             catch (DbEntityValidationException dbEx)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                LogHelper.Error(GetFullErrorText(dbEx), dbEx);
+                return new BaseResult("新增失败");
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error(ex.Message, ex);
+                return new BaseResult("新增失败");
             }
         }
 
@@ -225,7 +247,7 @@ namespace TS.Data
         /// <param name="entity"></param>
         /// <returns></returns>
         public virtual void InsertNoSave<T>(T entity)
-            where T : BaseEntity
+            where T : class
         {
             context.Entry(entity).State = EntityState.Added;
         }
@@ -235,8 +257,8 @@ namespace TS.Data
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public virtual int Insert<T>(IEnumerable<T> list)
-            where T :BaseEntity
+        public virtual BaseResult Insert<T>(IEnumerable<T> list)
+            where T :class
         {
             try
             {
@@ -244,11 +266,18 @@ namespace TS.Data
                 {
                     context.Entry(entity).State = EntityState.Added;
                 }
-                return context.SaveChanges();
+                context.SaveChanges();
+                return new BaseResult();
             }
             catch (DbEntityValidationException dbEx)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                LogHelper.Error(GetFullErrorText(dbEx), dbEx);
+                return new BaseResult("新增失败");
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error(ex.Message, ex);
+                return new BaseResult("新增失败");
             }
         }
 
@@ -258,7 +287,7 @@ namespace TS.Data
         /// <param name="list"></param>
         /// <returns></returns>
         public virtual void InsertNoSave<T>(IEnumerable<T> list)
-            where T : BaseEntity
+            where T : class
         {
             foreach (var entity in list)
             {
@@ -271,17 +300,19 @@ namespace TS.Data
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual int Delete<T>(T entity)
-             where T : BaseEntity
+        public virtual BaseResult Delete<T>(T entity)
+             where T : class
         {
             try
             {
                 context.Entry(entity).State = EntityState.Deleted;
-                return context.SaveChanges();
+                context.SaveChanges();
+                return new BaseResult();
             }
-            catch (DbEntityValidationException dbEx)
+            catch (Exception ex)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                LogHelper.Error(ex.Message, ex);
+                return new BaseResult("删除失败");
             }
         }
 
@@ -291,7 +322,7 @@ namespace TS.Data
         /// <param name="entity"></param>
         /// <returns></returns>
         public virtual void DeleteNosave<T>(T entity)
-             where T : BaseEntity
+             where T : class
         {
             context.Entry(entity).State = EntityState.Deleted;
         }
@@ -301,8 +332,8 @@ namespace TS.Data
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public virtual int Delete<T>(IEnumerable<T> list)
-            where T : BaseEntity
+        public virtual BaseResult Delete<T>(IEnumerable<T> list)
+            where T : class
         {
             try
             {
@@ -310,11 +341,13 @@ namespace TS.Data
                 {
                     context.Entry<T>(entity).State = EntityState.Deleted;
                 }
-                return context.SaveChanges();
+                context.SaveChanges();
+                return new BaseResult();
             }
-            catch (DbEntityValidationException dbEx)
+            catch (Exception ex)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                LogHelper.Error(ex.Message, ex);
+                return new BaseResult("删除失败");
             }
         }
 
@@ -324,7 +357,7 @@ namespace TS.Data
         /// <param name="list"></param>
         /// <returns></returns>
         public virtual void DeleteNoSave<T>(IEnumerable<T> list)
-            where T : BaseEntity
+            where T : class
         {
             foreach (var entity in list)
             {
@@ -337,8 +370,8 @@ namespace TS.Data
         /// </summary>
         /// <param name="lamda"></param>
         /// <returns></returns>
-        public virtual int Delete<T>(Expression<Func<T, bool>> lamda)
-            where T : BaseEntity
+        public virtual BaseResult Delete<T>(Expression<Func<T, bool>> lamda)
+            where T : class
         {
             try
             {
@@ -347,11 +380,13 @@ namespace TS.Data
                 {
                     context.Entry<T>(entity).State = EntityState.Deleted;
                 }
-                return context.SaveChanges();
+                context.SaveChanges();
+                return new BaseResult();
             }
-            catch (DbEntityValidationException dbEx)
+            catch (Exception ex)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                LogHelper.Error(ex.Message, ex);
+                return new BaseResult("删除失败");
             }
         }
 
@@ -361,7 +396,7 @@ namespace TS.Data
         /// <param name="lamda"></param>
         /// <returns></returns>
         public virtual void DeleteNoSave<T>(Expression<Func<T, bool>> lamda)
-            where T : BaseEntity
+            where T : class
         {
             var list = context.Set<T>().Where(lamda);
             foreach (var entity in list)
@@ -374,15 +409,17 @@ namespace TS.Data
         /// 保存更改
         /// </summary>
         /// <returns></returns>
-        public virtual int Save()
+        public virtual BaseResult Save()
         {
             try
             {
-                return context.SaveChanges();
+                context.SaveChanges();
+                return new BaseResult();
             }
-            catch (DbEntityValidationException dbEx)
+            catch (Exception ex)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                LogHelper.Error(ex.Message, ex);
+                return new BaseResult("保存失败");
             }
         }
 

@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseResult.cs" />
     <Compile Include="DynamicLinqExpressions.cs" />
     <Compile Include="EFRepository.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
