@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using TS.Web.Filters;
 
-namespace TS.Web.Controllers.Base
+namespace TS.Web.Controllers
 {
     [HttpException]
     public class BaseController : Controller

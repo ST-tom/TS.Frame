@@ -4,10 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TS.Service.Orders;
-using TS.Web.Controllers.Base;
 using TS.Web.Models.Orders;
 
-namespace TS.Web.Controllers.Orders
+namespace TS.Web.Controllers
 {
     public class OrderController : BaseController
     {
