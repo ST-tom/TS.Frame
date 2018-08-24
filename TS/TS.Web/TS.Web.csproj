@@ -142,11 +142,12 @@
     <Content Include="Content\css\common.css" />
     <Content Include="Content\css\page-footer.css" />
     <Content Include="Content\js\jquery-3.3.1.min.js" />
-    <Content Include="Content\js\pagination.js" />
     <Content Include="ErrorPage.htm" />
     <Content Include="FileNotFound.htm" />
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />

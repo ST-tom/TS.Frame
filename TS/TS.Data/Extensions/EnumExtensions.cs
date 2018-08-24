@@ -25,7 +25,7 @@ namespace TS.Data.Extensions
                 return null;
             }
             FieldInfo field = type.GetField(name);
-            DescriptionAttribute attribute = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
+            DescriptionAttribute attribute = field.GetCustomAttributes(typeof(DescriptionAttribute), true)[0] as DescriptionAttribute;
             if (attribute == null && nameInstend == true)
             {
                 return name;
@@ -42,11 +42,11 @@ namespace TS.Data.Extensions
             {
                 var field = enumType.GetField(fieldstr);
                 string description = string.Empty;
-                object[] arr = field.GetCustomAttributes(typeof(DescriptionAttribute), true);
+                DescriptionAttribute des = field.GetCustomAttributes(typeof(DescriptionAttribute), true)[0] as DescriptionAttribute;
 
-                if (arr != null && arr.Length > 0)
+                if (des != null)
                 {
-                    description = ((DescriptionAttribute)arr[0]).Description;   //属性描述
+                    description = des.Description;   //属性描述
                 }
                 else
                 {
