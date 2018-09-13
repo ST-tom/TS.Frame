@@ -142,6 +142,7 @@
     <Content Include="Content\css\common.css" />
     <Content Include="Content\css\page-footer.css" />
     <Content Include="Content\js\jquery-3.3.1.min.js" />
+    <Content Include="Content\js\jquery.serializeJson.js" />
     <Content Include="ErrorPage.htm" />
     <Content Include="FileNotFound.htm" />
     <Content Include="Global.asax" />
@@ -155,6 +156,8 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\WechatController.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Filters\HttpExceptionAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -167,7 +170,7 @@
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
     <Content Include="Views\Common\PageNotFound.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_LayoutBootstrap.cshtml" />
     <Content Include="Views\Shared\_PageFooter.cshtml" />
     <Content Include="Content\js\ts.list.js" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.css.map" />
@@ -180,6 +183,7 @@
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Views\Order\OrderList.cshtml" />
     <Content Include="Views\Order\_Order.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -189,6 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Wechat\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TS.Core\TS.Core.csproj">
@@ -202,6 +207,10 @@
     <ProjectReference Include="..\TS.Service\TS.Service.csproj">
       <Project>{bd105513-4eea-429b-a6b7-964eb37735a4}</Project>
       <Name>TS.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TS.WechatApi\TS.WechatAPI.csproj">
+      <Project>{B4873692-284D-464D-860F-8FD3FCE5D1BC}</Project>
+      <Name>TS.WechatAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

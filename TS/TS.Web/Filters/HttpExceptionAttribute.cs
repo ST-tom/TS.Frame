@@ -13,7 +13,7 @@ namespace TS.Web.Filters
         public virtual void OnException(ExceptionContext filterContext)
         {
             //IIS管理的应用，异常将返回ErrorPage页面，所以添加过滤器对ajax请求特殊处理，返回500
-            if (filterContext.HttpContext.Request.IsAjaxRequest())
+            if (filterContext.HttpContext.Request.IsAjaxRequest()) 
             {
       
                 LogHelper.Error("ajax请求错误", filterContext.Exception);

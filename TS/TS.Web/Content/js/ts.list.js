@@ -1,25 +1,25 @@
 ﻿; (function ($, window, document, undefined){
     var defaults = {
-        getPageListDataUrl: "",
-        pageIndex: 1,
-        pageSize: 10,
-        searchBtnId: "",
-        searchEleClass: "",
-        searchEleChangeEvent: true,
-        extendSerialize: null,
-        afterSuccess: null,
-        beforeSend: null,
-        error: null,
-        complete: null,
-        errorShow:null,
+        getPageListDataUrl: "",     //获取数据的请求路径
+        pageIndex: 1,               //当前页码
+        pageSize: 10,               //每页数据条目
+        searchBtnId: "",            //搜索按钮Id
+        searchEleClass: "",         //搜索项的类名
+        searchEleChangeEvent: true, //是否当搜索项发生变化时就更新数据
+        extendSerialize: null,      //额外http请求参数
+        afterSuccess: null,         //自定义http请求成功的处理
+        beforeSend: null,           //自定义发送http请求前的处理
+        error: null,                //自定义http请求失败处理
+        complete: null,             //自定义http请求完成处理
+        errorShow:null,             //自定义错误提示显示，错误信息参数errmsg - function(errmsg)
     }
 
     //页脚属性
     var footerConfig = {
-        footerContainerId: "",
-        footerMaxPageShowSize: 5,
-        footerFirstBtnShow: true,
-        footerTurnBtnShow: false,
+        footerContainerId: "",      //页脚显示位置
+        footerMaxPageShowSize: 5,   //页脚同时显示的页面条目
+        footerFirstBtnShow: true,   //是否启用首末跳转页功能
+        footerTurnBtnShow: false,   //是否启用跳转到指定页码功能
         totalCount: null,
         pageCount: null,
         footerHtml: [
