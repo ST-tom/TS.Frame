@@ -16,10 +16,10 @@ namespace TS.Data.Helper
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sheetName">页名</param>
-        /// <param name="cellHeard">属性的名称(key)和显示名称(value)</param>
+        /// <param name="cellHead">属性的名称(key)和显示名称(value)</param>
         /// <param name="data">导出到excel数据源</param>
         /// <returns></returns>
-        public XSSFWorkbook Export<T>(string sheetName, Dictionary<string, string> cellHeard, IQueryable<T> data)
+        public XSSFWorkbook Export<T>(string sheetName, Dictionary<string, string> cellHead, IQueryable<T> data)
         {
             //HSSF使用于2007之前的xls版本，XSSF适用于2007及其之后的xlsx版本
             XSSFWorkbook xk = new XSSFWorkbook();
@@ -32,10 +32,10 @@ namespace TS.Data.Helper
             style.SetFont(font);
 
             IRow row = sheet.CreateRow(0);
-            for (int i = 0; i < cellHeard.Count; i++)
+            for (int i = 0; i < cellHead.Count; i++)
             {
                 ICell cell = row.CreateCell(i);
-                cell.SetCellValue(cellHeard.ElementAt(i).Value);
+                cell.SetCellValue(cellHead.ElementAt(i).Value);
                 cell.SetCellType(CellType.String);
                 cell.CellStyle = style;
             }
@@ -46,10 +46,10 @@ namespace TS.Data.Helper
                 rowIndex++;
                 row = sheet.CreateRow(rowIndex);    
 
-                for (int j = 0; j < cellHeard.Count; j++)
+                for (int j = 0; j < cellHead.Count; j++)
                 {
                     var cellValue = string.Empty;
-                    var property = entity.GetType().GetProperties().FirstOrDefault(e => e.Name == cellHeard.ElementAt(j).Key);
+                    var property = entity.GetType().GetProperties().FirstOrDefault(e => e.Name == cellHead.ElementAt(j).Key);
 
                     if (property != null)
                     {
@@ -73,10 +73,10 @@ namespace TS.Data.Helper
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="xk">excel对象</param>
-        /// <param name="cellHeard">属性的名称(key)和显示名称(value)</param>
+        /// <param name="cellHead">属性的名称(key)和显示名称(value)</param>
         /// <param name="errmsg">错误信息</param>
         /// <returns></returns>
-        public List<T> Import<T>(XSSFWorkbook xk, Dictionary<string, string> cellHeard, out StringBuilder errmsg)
+        public List<T> Import<T>(XSSFWorkbook xk, Dictionary<string, string> cellHead, out StringBuilder errmsg)
             where T : new ()
         {
             var list = new List<T>();
@@ -93,9 +93,9 @@ namespace TS.Data.Helper
 
                 T entity = new T();
                 string errStr = "";
-                for (int j = 0; j < cellHeard.Count; j++)
+                for (int j = 0; j < cellHead.Count; j++)
                 {
-                    var properotyInfo = entity.GetType().GetProperty(cellHeard.ElementAt(j).Key);
+                    var properotyInfo = entity.GetType().GetProperty(cellHead.ElementAt(j).Key);
                     if (properotyInfo != null)
                     {
                         try
@@ -111,7 +111,7 @@ namespace TS.Data.Helper
                             {
                                 errStr = "第" + i + "行数据转换异常：";
                             }
-                            errStr += cellHeard.ElementAt(j) + "列；";
+                            errStr += cellHead.ElementAt(j) + "列；";
                         }
                     }
                 }

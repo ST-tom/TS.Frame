@@ -1,5 +1,4 @@
 ﻿using NPOI.XSSF.UserModel;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -38,14 +37,14 @@ namespace TS.Web.Controllers
             XSSFWorkbook xk = new ExcelHelper().Export("sheet1", cellHeard, new List<dynamic>().AsQueryable());
 
             //写入到客户端
-            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            using (MemoryStream ms = new MemoryStream())
             {
                 var fileName = "测试excel"; 
                 if (HttpContext.Request.Browser.Browser == "IE")
                     fileName = HttpUtility.UrlEncode(fileName);
 
                 xk.Write(ms);
-                Response.AddHeader("Content-Disposition", string.Format("attachment; filename={0}.xls", fileName));
+                Response.AddHeader("Content-Disposition", string.Format("attachment; filename={0}.xlsx", fileName));
                 Response.BinaryWrite(ms.ToArray());
             }
         }
