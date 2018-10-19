@@ -57,7 +57,7 @@ namespace TS.Web.Controllers
             if (postFile != null)
             {
                 string exName = postFile.FileName.Split('.')[1];
-                if (exName == ".xlsx")
+                if (exName == "xlsx")
                 {
                     if (postFile.ContentLength / 1024 <= 1024 * 5) //5MB
                     {
@@ -80,7 +80,7 @@ namespace TS.Web.Controllers
                 errmsg.Append("未上传文件");
             }
 
-            return Json(new { result = errmsg.Length == 0, errmsg = errmsg });
+            return Json(new { result = !string.IsNullOrWhiteSpace(errmsg.ToString()), errmsg = errmsg.ToString() });
         }
 
         #endregion

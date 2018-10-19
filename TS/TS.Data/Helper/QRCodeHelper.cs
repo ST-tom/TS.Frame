@@ -17,7 +17,7 @@ namespace TS.Data.Helper
         /// <param name="fileName"></param>
         /// <param name="savePath"></param>
         /// <returns></returns>
-        public string GetQRCode(string url, string savePath, string fileName = "", bool IsNameByDate = false)
+        public string GetQRCode(string url, string savePath, string fileName = "", bool isNamedByDate = false)
         {
             QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();
             qrCodeEncoder.QRCodeEncodeMode = QRCodeEncoder.ENCODE_MODE.BYTE;
@@ -26,15 +26,9 @@ namespace TS.Data.Helper
             qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
             Image image = qrCodeEncoder.Encode(url);
 
-            string filePath = "";
-            if (IsNameByDate)
-            {
-                filePath = fileName + "//" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".jpg";
-            }
-            else
-            {
-                filePath = fileName + "//" + fileName + ".jpg";
-            }
+            savePath = System.Web.Hosting.HostingEnvironment.MapPath(savePath);
+            fileName = !isNamedByDate && !string.IsNullOrWhiteSpace(fileName) ? $@"/{fileName}.jpg" : $@"/{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.jpg";
+            string filePath = $"{savePath}{fileName}";
 
             FileStream fs;
             if (System.IO.File.Exists(filePath))
@@ -49,7 +43,7 @@ namespace TS.Data.Helper
             fs.Close();
             image.Dispose();
 
-            return filePath;
+            return $"{savePath}{fileName}";
         }
     }
 }

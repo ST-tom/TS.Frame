@@ -61,7 +61,7 @@ namespace TS.Data.Helper
                         }
                     }
 
-                    row.CreateCell(j).SetCellValue(string.Empty);
+                    row.CreateCell(j).SetCellValue(cellValue);
                 }
             }
 
@@ -83,7 +83,7 @@ namespace TS.Data.Helper
             errmsg = new StringBuilder();
 
              var sheet = xk.GetSheetAt(0);
-            for (int i = 1; i < sheet.LastRowNum; i++)
+            for (int i = 1; i <= sheet.LastRowNum; i++)
             {
                 // 判断当前行是否空行
                 if (sheet.GetRow(i) == null)
@@ -93,6 +93,8 @@ namespace TS.Data.Helper
 
                 T entity = new T();
                 string errStr = "";
+                bool isToPropertyOk = true;
+
                 for (int j = 0; j < cellHead.Count; j++)
                 {
                     var properotyInfo = entity.GetType().GetProperty(cellHead.ElementAt(j).Key);
@@ -100,7 +102,7 @@ namespace TS.Data.Helper
                     {
                         try
                         {
-                            // Excel单元格的值转换为对象属性的值，若类型不对，记录出错信息
+                            //Excel单元格的值转换为对象属性的值，若类型不对，记录出错信息
                             properotyInfo.SetValue(entity, ExcelCellToProperty(properotyInfo.PropertyType, sheet.GetRow(i).GetCell(j)), null);
                         }
                         catch (Exception ex)
@@ -112,6 +114,9 @@ namespace TS.Data.Helper
                                 errStr = "第" + i + "行数据转换异常：";
                             }
                             errStr += cellHead.ElementAt(j) + "列；";
+
+                            isToPropertyOk = false;
+                            break;
                         }
                     }
                 }
@@ -120,7 +125,10 @@ namespace TS.Data.Helper
                 {
                     errmsg.AppendLine(errStr);
                 }
-                list.Add(entity);
+                if (isToPropertyOk)
+                {
+                    list.Add(entity);
+                }
             }
             return list;
         }
@@ -189,12 +197,19 @@ namespace TS.Data.Helper
                 case "single":
                     rs = (float)Convert.ChangeType(sourceCell.NumericCellValue.ToString(), distanceType);
                     break;
-                case "datetime":
-                    rs = sourceCell.DateCellValue;
-                    break;
                 case "guid":
                     rs = (Guid)Convert.ChangeType(sourceCell.NumericCellValue.ToString(), distanceType);
-                    return rs;
+                    break;
+                case "datetime":
+                    rs = Convert.ToDateTime(sourceValue.ToString());
+                    break;
+                default:
+                    //枚举特殊处理
+                    if (distanceType.BaseType.Name.ToLower() == "enum")
+                        rs = Enum.Parse(distanceType, sourceValue.ToString());
+                    else
+                        rs = Convert.ChangeType(sourceValue.ToString(), distanceType);
+                    break;
             }
             return rs;
         }
