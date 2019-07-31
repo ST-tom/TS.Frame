@@ -9,23 +9,20 @@ using TS.Data;
 
 namespace TS.Service.Orders
 {
-    public class OrderService : BaseService
+    public class OrderService
     {
-        public OrderService() : base()
-        {
-
-        }
+        private IRepository<Order> OrderRepository {get;set;}
 
         public PagedList<Order> GetPageOrders(int pageIndex,int pageSize,string customerName)
         {
-            var lamda = EFRepository.ExpressionTrue<Order>();
+            var lamda = OrderRepository.ExpressionTrue();
 
             if (!string.IsNullOrWhiteSpace(customerName))
             {
                 lamda = lamda.And(e => e.CustomerName.Contains(customerName));
             }
 
-            return EFRepository.GetPagedData(pageIndex, pageSize, lamda, e => e.CreateTime);
+            return OrderRepository.GetPagedData(pageIndex, pageSize, lamda, e => e.CreateTime);
         }
     }
 }

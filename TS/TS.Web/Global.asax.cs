@@ -15,6 +15,7 @@ namespace TS.Web
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            DependencyConfig.Register();
         }
 
         protected void Application_Error(Object sender, EventArgs e)

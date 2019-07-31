@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using TS.Core;
 using TS.Core.Domain.Orders;
 
 namespace TS.Data
 {
-    public  class TSContext : DbContext
+    public  class TSContext : DbContext, IDbContext
     {
         static TSContext()
         {
@@ -28,7 +30,17 @@ namespace TS.Data
 
         }
 
-        public virtual DbSet<Order> Orders { get; set; }
+        public new DbSet<TEntity> Set<TEntity>()
+            where TEntity : BaseEntity
+        {
+            return base.Set<TEntity>();
+        }
+        public new DbEntityEntry<TEntity> Entry<TEntity>(TEntity entity)
+            where TEntity : BaseEntity
+        {
+            return base.Entry(entity);
+        }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

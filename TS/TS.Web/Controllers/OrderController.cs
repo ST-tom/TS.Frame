@@ -10,6 +10,8 @@ namespace TS.Web.Controllers
 {
     public class OrderController : BaseController
     {
+        private IOrderService OrderService { get; set; }
+
         // GET: Order
         public ActionResult Index()
         {
@@ -23,7 +25,7 @@ namespace TS.Web.Controllers
 
         public ActionResult OrderPageList(int pageIndex,int pageSize,OrderListModel model)
         {
-            var orders = new OrderService().GetPageOrders(pageIndex, pageSize, model.CustomerName);
+            var orders = OrderService.GetPageOrders(pageIndex, pageSize, model.CustomerName);
 
             var list = orders.Select(order => {
                 return new OrderModel()

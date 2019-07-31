@@ -81,7 +81,7 @@
   <ItemGroup>
     <Compile Include="BaseResult.cs" />
     <Compile Include="DynamicLinqExpressions.cs" />
-    <Compile Include="EFRepository.cs" />
+    <Compile Include="Repository.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Helper\CacheHelper.cs" />
     <Compile Include="Helper\CookieHelper.cs" />
@@ -89,6 +89,8 @@
     <Compile Include="Helper\HttpHelper.cs" />
     <Compile Include="Helper\LogHelper.cs" />
     <Compile Include="Helper\QRCodeHelper.cs" />
+    <Compile Include="IDbContext.cs" />
+    <Compile Include="IRepository.cs" />
     <Compile Include="TSContext.cs" />
     <Compile Include="ParameterRebinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
