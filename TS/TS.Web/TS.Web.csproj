@@ -155,6 +155,7 @@
     <Content Include="ErrorPage.htm" />
     <Content Include="FileNotFound.htm" />
     <Content Include="Global.asax" />
+    <Content Include="Tools\wkhtmltopdf.exe" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -194,6 +195,7 @@
     <Content Include="Views\Order\OrderList.cshtml" />
     <Content Include="Views\Order\_Order.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Properties\PublishProfiles\st.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

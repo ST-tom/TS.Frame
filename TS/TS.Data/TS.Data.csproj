@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="BaseResult.cs" />
     <Compile Include="DynamicLinqExpressions.cs" />
+    <Compile Include="Helper\PDFHelper.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Helper\CacheHelper.cs" />
